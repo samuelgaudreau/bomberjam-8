@@ -37,7 +37,7 @@ namespace Bomberjam.Bot
         public static async Task Main()
         {
             // TODO-Setup-2: Choose if you want to train, test or play
-            var role = ProgramRole.EvaluateFeature;
+            var role = ProgramRole.TrainAndSave;
 
             // TODO-Extra: You can try using a different algorithm
             // TODO-Extra: You can try different sample size

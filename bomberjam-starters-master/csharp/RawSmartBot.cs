@@ -11,7 +11,7 @@ namespace Bomberjam.Bot
     // Bot using raw features
     public class RawSmartBot : BaseSmartBot<RawSmartBot.RawPlayerState>
     {
-        private const int FeaturesSize = 14;
+        private const int FeaturesSize = 18;
 
         // Datapoint
         public class RawPlayerState : LabeledDataPoint
@@ -78,6 +78,8 @@ namespace Bomberjam.Bot
                 playerInBombRange ? 1 : 0,
                 bonusInCloseRange ? 1 : 0,
                 bonusInMidRange ? 1 : 0,              
+
+                IsClosestBombEvitable ? 1 : 0,
 
                 isBombMenacing ? 1 : 0,
             };
