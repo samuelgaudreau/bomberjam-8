@@ -49,8 +49,10 @@ namespace Bomberjam.Bot
             var amIOnABomb = GameStateUtils.GetBoardTile(state, x, y, myPlayerId) == GameStateUtils.Tile.Bomb;
 
             var otherPlayerInRange = state.Players.Any(z => (Math.Abs(z.Value.X) - Math.Abs(player.X)) < player.BombRange || (Math.Abs(z.Value.Y) - Math.Abs(player.Y)) < player.BombRange);
-            var playerInBombRange = state.Bombs.Any(z => (player.X - z.Value.X) <= z.Value.Range || (player.Y - z.Value.Y) <= z.Value.Range);
-            
+            var playerInBombRange = state.Bombs.Any(z => (player.X - z.Value.X) <= z.Value.Range || (player.Y - z.Value.Y) <= z.Value.Range);     
+            var bonusInCloseRange = (GameStateUtils.Tile)topTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.Bonus;
+            var bonusInMidRange = ((GameStateUtils.Tile)nextTopTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)topTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextLeftTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextRightTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextBottomTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.FreeSpace);
+
             var features = new List<float>
             {
                 topTile,
@@ -72,6 +74,9 @@ namespace Bomberjam.Bot
 
                 otherPlayerInRange ? 1 : 0,
                 playerInBombRange ? 1 : 0,
+
+                bonusInCloseRange ? 1 : 0,
+                bonusInMidRange ? 1 : 0,              
             };
 
             // Don't touch anything under this line
