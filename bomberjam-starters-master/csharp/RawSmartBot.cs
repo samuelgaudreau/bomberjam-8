@@ -59,7 +59,10 @@ namespace Bomberjam.Bot
             var bonusInCloseRange = (GameStateUtils.Tile)topTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.Bonus;
             var bonusInMidRange = ((GameStateUtils.Tile)nextTopTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)topTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextLeftTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextRightTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextBottomTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.FreeSpace);
             
-            var isBombMenacing = this.IsBombMenacing(player.X, player.Y, state, myPlayerId);
+            var isBombMenacingFromTop = this.IsBombMenacing(player.X, player.Y, state, myPlayerId, 1);
+            var isBombMenacingFromLeft = this.IsBombMenacing(player.X, player.Y, state, myPlayerId, 2);
+            var isBombMenacingFromRight = this.IsBombMenacing(player.X, player.Y, state, myPlayerId, 3);
+            var isBombMenacingFromBottom = this.IsBombMenacing(player.X, player.Y, state, myPlayerId, 4);
 
             var features = new List<float>
             {
@@ -90,7 +93,11 @@ namespace Bomberjam.Bot
                 bonusInCloseRange ? 1 : 0,
                 bonusInMidRange ? 1 : 0,              
 
-                isBombMenacing ? 1 : 0,
+                isBombMenacingFromTop ? 1 : 0,
+                isBombMenacingFromLeft ? 1 : 0,
+                isBombMenacingFromRight ? 1 : 0,
+                isBombMenacingFromBottom ? 1 : 0,
+
                 (float)player.BombsLeft / (float)player.MaxBombs,  
 
                 this.IsTileMakingPoints(player.X, player.Y, state, myPlayerId) ? 1 : 0,
@@ -130,67 +137,79 @@ namespace Bomberjam.Bot
             return Array.Empty<IEstimator<ITransformer>>();
         }
 
-        private bool IsBombMenacing(int x, int y, GameState state, string myPlayerId)
+        private bool IsBombMenacing(int x, int y, GameState state, string myPlayerId, int quadrant = 0)
         {
             var isBombMenacing = false;
 
-            for(var i = x; i < state.Width; i++)
+            if (quadrant == 0 || quadrant == 1)
             {
-                var tile = GameStateUtils.GetBoardTile(state, i, y, myPlayerId);
+                for(var i = x; i < state.Width; i++)
+                {
+                    var tile = GameStateUtils.GetBoardTile(state, i, y, myPlayerId);
 
-                if (tile == GameStateUtils.Tile.Block ||
-                    tile == GameStateUtils.Tile.BreakableBlock)
-                    break;
+                    if (tile == GameStateUtils.Tile.Block ||
+                        tile == GameStateUtils.Tile.BreakableBlock)
+                        break;
 
-                if (tile == GameStateUtils.Tile.Bomb)
-                {   
-                    var bomb = state.Bombs.First(z => z.Value.X == i && z.Value.Y == y).Value;
-                    isBombMenacing = bomb.Range >= Math.Abs(i - x);
+                    if (tile == GameStateUtils.Tile.Bomb)
+                    {   
+                        var bomb = state.Bombs.First(z => z.Value.X == i && z.Value.Y == y).Value;
+                        isBombMenacing = bomb.Range >= Math.Abs(i - x);
+                    }
                 }
             }
 
-            for(var i = x; i >= 0; i--)
+            if (quadrant == 0 || quadrant == 2)
             {
-                var tile = GameStateUtils.GetBoardTile(state, i, y, myPlayerId);
-                
-                if (tile == GameStateUtils.Tile.Block ||
-                    tile == GameStateUtils.Tile.BreakableBlock)
-                    break;
+                for(var i = x; i >= 0; i--)
+                {
+                    var tile = GameStateUtils.GetBoardTile(state, i, y, myPlayerId);
+                    
+                    if (tile == GameStateUtils.Tile.Block ||
+                        tile == GameStateUtils.Tile.BreakableBlock)
+                        break;
 
-                if (tile == GameStateUtils.Tile.Bomb)
-                {   
-                    var bomb = state.Bombs.First(z => z.Value.X == i && z.Value.Y == y).Value;
-                    isBombMenacing = bomb.Range >= Math.Abs(i - x);
+                    if (tile == GameStateUtils.Tile.Bomb)
+                    {   
+                        var bomb = state.Bombs.First(z => z.Value.X == i && z.Value.Y == y).Value;
+                        isBombMenacing = bomb.Range >= Math.Abs(i - x);
+                    }
                 }
             }
 
-            for(var i = y; i < state.Height; i++)
+            if (quadrant == 0 || quadrant == 3)
             {
-                var tile = GameStateUtils.GetBoardTile(state, x, i, myPlayerId);
+                for(var i = y; i < state.Height; i++)
+                {
+                    var tile = GameStateUtils.GetBoardTile(state, x, i, myPlayerId);
 
-                if (tile == GameStateUtils.Tile.Block ||
-                    tile == GameStateUtils.Tile.BreakableBlock)
-                    break;
+                    if (tile == GameStateUtils.Tile.Block ||
+                        tile == GameStateUtils.Tile.BreakableBlock)
+                        break;
 
-                if (tile == GameStateUtils.Tile.Bomb)
-                {   
-                    var bomb = state.Bombs.First(z => z.Value.X == x && z.Value.Y == i).Value;
-                    isBombMenacing = bomb.Range >= Math.Abs(i - y);
+                    if (tile == GameStateUtils.Tile.Bomb)
+                    {   
+                        var bomb = state.Bombs.First(z => z.Value.X == x && z.Value.Y == i).Value;
+                        isBombMenacing = bomb.Range >= Math.Abs(i - y);
+                    }
                 }
             }
 
-            for(var i = y; i >= 0; i--)
+            if (quadrant == 0 || quadrant == 4)
             {
-                var tile = GameStateUtils.GetBoardTile(state, x, i, myPlayerId);
+                for(var i = y; i >= 0; i--)
+                {
+                    var tile = GameStateUtils.GetBoardTile(state, x, i, myPlayerId);
 
-                if (tile == GameStateUtils.Tile.Block ||
-                    tile == GameStateUtils.Tile.BreakableBlock)
-                    break;
+                    if (tile == GameStateUtils.Tile.Block ||
+                        tile == GameStateUtils.Tile.BreakableBlock)
+                        break;
 
-                if (tile == GameStateUtils.Tile.Bomb)
-                {   
-                    var bomb = state.Bombs.First(z => z.Value.X == x && z.Value.Y == i).Value;
-                    isBombMenacing = bomb.Range >= Math.Abs(i - y);
+                    if (tile == GameStateUtils.Tile.Bomb)
+                    {   
+                        var bomb = state.Bombs.First(z => z.Value.X == x && z.Value.Y == i).Value;
+                        isBombMenacing = bomb.Range >= Math.Abs(i - y);
+                    }
                 }
             }
 
