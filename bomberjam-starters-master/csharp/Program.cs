@@ -37,11 +37,11 @@ namespace Bomberjam.Bot
         public static async Task Main()
         {
             // TODO-Setup-2: Choose if you want to train, test or play
-            var role = ProgramRole.EvaluateFeature;
+            var role = ProgramRole.TrainAndSave;
 
             // TODO-Extra: You can try using a different algorithm
             // TODO-Extra: You can try different sample size
-            var sampleSize = 50;
+            var sampleSize = 100;
             var smartBot = new RawSmartBot(MultiClassAlgorithmType.LightGbm, sampleSize);
 
             switch (role)
