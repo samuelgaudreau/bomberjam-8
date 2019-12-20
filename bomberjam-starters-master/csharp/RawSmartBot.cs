@@ -48,8 +48,6 @@ namespace Bomberjam.Bot
 
             var amIOnABomb = GameStateUtils.GetBoardTile(state, x, y, myPlayerId) == GameStateUtils.Tile.Bomb;
 
-            var otherPlayerInRange = state.Players.Any(z => (Math.Abs(z.Value.X) - Math.Abs(player.X)) < player.BombRange || (Math.Abs(z.Value.Y) - Math.Abs(player.Y)) < player.BombRange);
-
             var playerInBombRange = state.Bombs.Any(z => (player.X - z.Value.X) <= z.Value.Range || (player.Y - z.Value.Y) <= z.Value.Range);
 
             var closestBomb = new Bomb();
@@ -85,15 +83,12 @@ namespace Bomberjam.Bot
 
                 amIOnABomb ? 1 : 0,
 
-                otherPlayerInRange ? 1 : 0,
                 playerInBombRange ? 1 : 0,
-<<<<<<< HEAD
 
                 bonusInCloseRange ? 1 : 0,
                 bonusInMidRange ? 1 : 0,              
-=======
+
                 IsClosestBombEvitable ? 1 : 0,
->>>>>>> 5e02b7eab774f8cec02e08d7d32fba826d2ccd31
             };
 
             // Don't touch anything under this line
