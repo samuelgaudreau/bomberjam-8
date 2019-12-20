@@ -91,7 +91,17 @@ namespace Bomberjam.Bot
                 bonusInMidRange ? 1 : 0,              
 
                 isBombMenacing ? 1 : 0,
-                (float)player.BombsLeft / (float)player.MaxBombs
+                (float)player.BombsLeft / (float)player.MaxBombs,  
+
+                this.IsTileMakingPoints(player.X, player.Y, state, myPlayerId) ? 1 : 0,
+                this.IsTileMakingPoints(player.X + 1, player.Y, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X, player.Y + 1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X - 1, player.Y, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X, player.Y - 1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X + 2, player.Y, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X, player.Y + 2, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X - 2, player.Y, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X, player.Y - 2, state, myPlayerId) ? 1 : 0,     
             };
 
             // Don't touch anything under this line
@@ -187,6 +197,30 @@ namespace Bomberjam.Bot
             var isFireOnTile = tile == GameStateUtils.Tile.Explosion;
 
             return !isBombMenacing && !isFireOnTile;
+        }
+
+        private bool IsTileMakingPoints(int x, int y, GameState state, string myPlayerId)
+        {
+            var isTileMakingPoints = false;
+
+            var topTile = GameStateUtils.GetBoardTile(state, x, y - 1, myPlayerId);
+            var leftTile = GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId);
+            var rightTile = GameStateUtils.GetBoardTile(state, x + 1, y, myPlayerId);
+            var bottomTile = GameStateUtils.GetBoardTile(state, x, y + 1, myPlayerId);
+
+            if (topTile == GameStateUtils.Tile.BreakableBlock || topTile == GameStateUtils.Tile.Enemy)
+                isTileMakingPoints = true;
+
+            if (leftTile == GameStateUtils.Tile.BreakableBlock || leftTile == GameStateUtils.Tile.Enemy)
+                isTileMakingPoints = true;
+
+            if (rightTile == GameStateUtils.Tile.BreakableBlock || rightTile == GameStateUtils.Tile.Enemy)
+                isTileMakingPoints = true;
+
+            if (bottomTile == GameStateUtils.Tile.BreakableBlock || bottomTile == GameStateUtils.Tile.Enemy)
+                isTileMakingPoints = true;
+
+            return isTileMakingPoints;
         }
     }
 }
