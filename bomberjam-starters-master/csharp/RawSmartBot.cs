@@ -11,7 +11,7 @@ namespace Bomberjam.Bot
     // Bot using raw features
     public class RawSmartBot : BaseSmartBot<RawSmartBot.RawPlayerState>
     {
-        private const int FeaturesSize = 40;
+        private const int FeaturesSize = 51;
 
 
         // Datapoint
@@ -37,6 +37,7 @@ namespace Bomberjam.Bot
             var leftTile = (uint) GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId);
             var rightTile = (uint) GameStateUtils.GetBoardTile(state, x + 1, y, myPlayerId);
             var bottomTile = (uint) GameStateUtils.GetBoardTile(state, x, y + 1, myPlayerId);
+
             var isTopTileSafe = IsTileSafe(GameStateUtils.GetBoardTile(state, x, y - 1, myPlayerId), x, y, state, myPlayerId);
             var isLeftTileSafe = IsTileSafe(GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId), x, y, state, myPlayerId);
             var isRightTileSafe = IsTileSafe(GameStateUtils.GetBoardTile(state, x + 1, y, myPlayerId), x, y, state, myPlayerId);
@@ -56,6 +57,16 @@ namespace Bomberjam.Bot
             var nexterLeftTile = (uint)GameStateUtils.GetBoardTile(state, x - 3, y, myPlayerId);
             var nexterRightTile = (uint)GameStateUtils.GetBoardTile(state, x + 3, y, myPlayerId);
             var nexterBottomTile = (uint)GameStateUtils.GetBoardTile(state, x, y + 3, myPlayerId);
+
+            var nexterTopTile2 = (uint)GameStateUtils.GetBoardTile(state, x, y - 4, myPlayerId);
+            var nexterLeftTile2 = (uint)GameStateUtils.GetBoardTile(state, x - 4, y, myPlayerId);
+            var nexterRightTile2 = (uint)GameStateUtils.GetBoardTile(state, x + 4, y, myPlayerId);
+            var nexterBottomTile2 = (uint)GameStateUtils.GetBoardTile(state, x, y + 4, myPlayerId);
+
+            var nexterTopTile3 = (uint)GameStateUtils.GetBoardTile(state, x, y - 5, myPlayerId);
+            var nexterLeftTile3 = (uint)GameStateUtils.GetBoardTile(state, x - 5, y, myPlayerId);
+            var nexterRightTile3 = (uint)GameStateUtils.GetBoardTile(state, x + 5, y, myPlayerId);
+            var nexterBottomTile3 = (uint)GameStateUtils.GetBoardTile(state, x, y + 5, myPlayerId);
 
             var amIOnABomb = GameStateUtils.GetBoardTile(state, x, y, myPlayerId) == GameStateUtils.Tile.Bomb;
 
@@ -97,6 +108,16 @@ namespace Bomberjam.Bot
                 nexterRightTile,
                 nexterBottomTile,
 
+                nexterTopTile2,
+                nexterLeftTile2,
+                nexterRightTile2,
+                nexterBottomTile2,
+
+                nexterTopTile3,
+                nexterLeftTile3,
+                nexterRightTile3,
+                nexterBottomTile3,
+
                 amIOnABomb ? 1 : 0,
 
                 playerInBombRange ? 1 : 0,
@@ -121,10 +142,10 @@ namespace Bomberjam.Bot
                 this.IsTileMakingPoints(player.X - 1, player.Y + 1, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X + 1, player.Y - 1, state, myPlayerId) ? 1 : 0,
 
-                this.IsTileMakingPoints(player.X + 2, player.Y, state, myPlayerId) ? 1 : 0,      
-                this.IsTileMakingPoints(player.X, player.Y + 2, state, myPlayerId) ? 1 : 0,      
-                this.IsTileMakingPoints(player.X - 2, player.Y, state, myPlayerId) ? 1 : 0,      
-                this.IsTileMakingPoints(player.X, player.Y - 2, state, myPlayerId) ? 1 : 0,     
+                this.IsTileMakingPoints(player.X + 2, player.Y, state, myPlayerId) ? 1 : 0,
+                this.IsTileMakingPoints(player.X, player.Y + 2, state, myPlayerId) ? 1 : 0,
+                this.IsTileMakingPoints(player.X - 2, player.Y, state, myPlayerId) ? 1 : 0,
+                this.IsTileMakingPoints(player.X, player.Y - 2, state, myPlayerId) ? 1 : 0,
             };
 
             // Don't touch anything under this line
