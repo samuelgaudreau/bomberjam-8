@@ -49,8 +49,23 @@ namespace Bomberjam.Bot
             var amIOnABomb = GameStateUtils.GetBoardTile(state, x, y, myPlayerId) == GameStateUtils.Tile.Bomb;
 
             var otherPlayerInRange = state.Players.Any(z => (Math.Abs(z.Value.X) - Math.Abs(player.X)) < player.BombRange || (Math.Abs(z.Value.Y) - Math.Abs(player.Y)) < player.BombRange);
+
             var playerInBombRange = state.Bombs.Any(z => (player.X - z.Value.X) <= z.Value.Range || (player.Y - z.Value.Y) <= z.Value.Range);
-            
+
+            var closestBomb = new Bomb();
+            var minRange = Int32.MaxValue;
+            var closestBombRangeFromPlayer = 0;
+            foreach (var bomb in state.Bombs.Values)
+            {
+                closestBombRangeFromPlayer = Math.Abs(x - bomb.X) + Math.Abs(y - bomb.Y);
+                if (closestBombRangeFromPlayer < minRange) closestBomb = bomb;
+            }
+
+            var IsClosestBombEvitable = closestBombRangeFromPlayer - closestBomb.Countdown > 0;
+
+            var bonusInCloseRange = (GameStateUtils.Tile)topTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.Bonus;
+            var bonusInMidRange = ((GameStateUtils.Tile)nextTopTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)topTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextLeftTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextRightTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextBottomTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.FreeSpace);
+
             var features = new List<float>
             {
                 topTile,
@@ -71,6 +86,13 @@ namespace Bomberjam.Bot
                 amIOnABomb ? 1 : 0,
 
                 playerInBombRange ? 1 : 0,
+<<<<<<< HEAD
+
+                bonusInCloseRange ? 1 : 0,
+                bonusInMidRange ? 1 : 0,              
+=======
+                IsClosestBombEvitable ? 1 : 0,
+>>>>>>> 5e02b7eab774f8cec02e08d7d32fba826d2ccd31
             };
 
 
