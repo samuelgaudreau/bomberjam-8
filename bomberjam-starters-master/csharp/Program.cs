@@ -10,10 +10,10 @@ namespace Bomberjam.Bot
     public class Program
     {
         // TODO-Setup-1: Set the path of unzipped gamelog files
-        private const string gameLogsPath = @"F:\tmp\6000_bomberjam_gamelogs";
+        private const string gameLogsPath = @"./../../../../../Games";
 
         // TODO-Setup-1: Define the path where your AI model will be saved
-        private const string modelSavePath = @"F:\tmp\smartBot.zip";
+        private static readonly string modelSavePath = @"./../../../../../Models/smartBot" + DateTime.Now.ToString("O") +".zip";
 
         enum ProgramRole
         {
