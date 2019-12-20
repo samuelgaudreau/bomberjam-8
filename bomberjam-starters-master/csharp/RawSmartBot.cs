@@ -99,7 +99,7 @@ namespace Bomberjam.Bot
                 this.IsTileMakingPoints(player.X - 1, player.Y, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X, player.Y - 1, state, myPlayerId) ? 1 : 0,
 
-                 this.IsTileMakingPoints(player.X + 1, player.Y -1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X + 1, player.Y - 1, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X - 1, player.Y + 1, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X - 1, player.Y + 1, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X + 1, player.Y - 1, state, myPlayerId) ? 1 : 0,
@@ -209,10 +209,10 @@ namespace Bomberjam.Bot
         {
             var isTileMakingPoints = false;
 
-            var topTile = GameStateUtils.GetBoardTile(state, x, y - 1, myPlayerId);
-            var leftTile = GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId);
-            var rightTile = GameStateUtils.GetBoardTile(state, x + 1, y, myPlayerId);
-            var bottomTile = GameStateUtils.GetBoardTile(state, x, y + 1, myPlayerId);
+            var topTile = GameStateUtils.GetBoardTile(state, x, y, myPlayerId);
+            var leftTile = GameStateUtils.GetBoardTile(state, x, y, myPlayerId);
+            var rightTile = GameStateUtils.GetBoardTile(state, x, y, myPlayerId);
+            var bottomTile = GameStateUtils.GetBoardTile(state, x, y, myPlayerId);
 
             if (topTile == GameStateUtils.Tile.BreakableBlock || topTile == GameStateUtils.Tile.Enemy)
                 isTileMakingPoints = true;
