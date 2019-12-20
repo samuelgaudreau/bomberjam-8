@@ -11,7 +11,7 @@ namespace Bomberjam.Bot
     // Bot using raw features
     public class RawSmartBot : BaseSmartBot<RawSmartBot.RawPlayerState>
     {
-        private const int FeaturesSize = 23;
+        private const int FeaturesSize = 40;
 
 
         // Datapoint
@@ -41,6 +41,11 @@ namespace Bomberjam.Bot
             var isLeftTileSafe = IsTileSafe(GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId), x, y, state, myPlayerId);
             var isRightTileSafe = IsTileSafe(GameStateUtils.GetBoardTile(state, x + 1, y, myPlayerId), x, y, state, myPlayerId);
             var isBottomTileSafe = IsTileSafe(GameStateUtils.GetBoardTile(state, x, y + 1, myPlayerId), x, y, state, myPlayerId);
+
+            var isTopTileSafe2 = IsTileSafe(GameStateUtils.GetBoardTile(state, x, y - 2, myPlayerId), x, y, state, myPlayerId);
+            var isLeftTileSafe2 = IsTileSafe(GameStateUtils.GetBoardTile(state, x - 2, y, myPlayerId), x, y, state, myPlayerId);
+            var isRightTileSafe2 = IsTileSafe(GameStateUtils.GetBoardTile(state, x + 2, y, myPlayerId), x, y, state, myPlayerId);
+            var isBottomTileSafe2 = IsTileSafe(GameStateUtils.GetBoardTile(state, x, y + 2, myPlayerId), x, y, state, myPlayerId);
 
             var nextTopTile = (uint) GameStateUtils.GetBoardTile(state, x, y - 2, myPlayerId);
             var nextLeftTile = (uint) GameStateUtils.GetBoardTile(state, x - 2, y, myPlayerId);
@@ -76,6 +81,11 @@ namespace Bomberjam.Bot
                 isLeftTileSafe ? 1: 0,
                 isRightTileSafe ? 1: 0,
                 isBottomTileSafe ? 1: 0,
+
+                isTopTileSafe2 ? 1: 0,
+                isLeftTileSafe2 ? 1: 0,
+                isRightTileSafe2 ? 1: 0,
+                isBottomTileSafe2 ? 1: 0,
                 
                 nextTopTile,
                 nextLeftTile,
