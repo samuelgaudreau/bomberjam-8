@@ -11,7 +11,7 @@ namespace Bomberjam.Bot
     // Bot using raw features
     public class RawSmartBot : BaseSmartBot<RawSmartBot.RawPlayerState>
     {
-        private const int FeaturesSize = 5;
+        private const int FeaturesSize = 7;
 
         // Datapoint
         public class RawPlayerState : LabeledDataPoint
@@ -41,6 +41,17 @@ namespace Bomberjam.Bot
             var otherPlayerInRange = state.Players.Any(z => (Math.Abs(z.Value.X) - Math.Abs(player.X)) < player.BombRange || (Math.Abs(z.Value.Y) - Math.Abs(player.Y)) < player.BombRange);
             var playerInBombRange = state.Bombs.Any(z => (player.X - z.Value.X) <= z.Value.Range || (player.Y - z.Value.Y) <= z.Value.Range);
 
+            var closestBomb = new Bomb();
+            var minRange = Int32.MaxValue;
+            var closestBombRangeFromPlayer = 0;
+            foreach (var bomb in state.Bombs.Values)
+            {
+                closestBombRangeFromPlayer = Math.Abs(x - bomb.X) + Math.Abs(y - bomb.Y);
+                if (closestBombRangeFromPlayer < minRange) closestBomb = bomb;
+            }
+
+            var IsClosestBombEvitable = closestBombRangeFromPlayer - closestBomb.Countdown > 0;
+
             var features = new List<float>
             {
                 topTile,
@@ -53,6 +64,7 @@ namespace Bomberjam.Bot
 
                 otherPlayerInRange ? 1 : 0,
                 playerInBombRange ? 1 : 0,
+                IsClosestBombEvitable ? 1 : 0,
             };
 
             // Don't touch anything under this line
