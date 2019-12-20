@@ -4,6 +4,7 @@ using Bomberjam.Bot.SmartBot;
 using Bomberjam.Client;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using System.Linq;
 
 namespace Bomberjam.Bot
 {
@@ -37,13 +38,21 @@ namespace Bomberjam.Bot
 
             var amIOnABomb = GameStateUtils.GetBoardTile(state, x, y, myPlayerId) == GameStateUtils.Tile.Bomb;
 
+            var otherPlayerInRange = state.Players.Any(z => (Math.Abs(z.Value.X) - Math.Abs(player.X)) < player.BombRange || (Math.Abs(z.Value.Y) - Math.Abs(player.Y)) < player.BombRange);
+            var playerInBombRange = state.Bombs.Any(z => (player.X - z.Value.X) <= z.Value.Range || (player.Y - z.Value.Y) <= z.Value.Range);
+
             var features = new List<float>
             {
                 topTile,
                 leftTile,
                 rightTile,
                 bottomTile,
-                amIOnABomb ? 1 : 0
+                amIOnABomb ? 1 : 0,
+
+
+
+                otherPlayerInRange ? 1 : 0,
+                playerInBombRange ? 1 : 0,
             };
 
             // Don't touch anything under this line
