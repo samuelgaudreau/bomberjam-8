@@ -11,7 +11,7 @@ namespace Bomberjam.Bot
     // Bot using raw features
     public class RawSmartBot : BaseSmartBot<RawSmartBot.RawPlayerState>
     {
-        private const int FeaturesSize = 13;
+        private const int FeaturesSize = 18;
 
         // Datapoint
         public class RawPlayerState : LabeledDataPoint
@@ -53,12 +53,15 @@ namespace Bomberjam.Bot
             var bonusInCloseRange = (GameStateUtils.Tile)topTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.Bonus || (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.Bonus;
             var bonusInMidRange = ((GameStateUtils.Tile)nextTopTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)topTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextLeftTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextRightTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextBottomTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.FreeSpace);
 
+            var isBombMenacing = this.IsBombMenacing(player, state, myPlayerId);
+            
             var features = new List<float>
             {
                 topTile,
                 leftTile,
                 rightTile,
                 bottomTile,
+                state.Tick,
 
                 nextTopTile,
                 nextLeftTile,
@@ -74,7 +77,11 @@ namespace Bomberjam.Bot
 
                 playerInBombRange ? 1 : 0,
                 bonusInCloseRange ? 1 : 0,
-                bonusInMidRange ? 1 : 0,
+                bonusInMidRange ? 1 : 0,              
+
+                IsClosestBombEvitable ? 1 : 0,
+
+                isBombMenacing ? 1 : 0,
             };
 
 
@@ -96,6 +103,73 @@ namespace Bomberjam.Bot
         protected override IEnumerable<IEstimator<ITransformer>> GetFeaturePipeline()
         {
             return Array.Empty<IEstimator<ITransformer>>();
+        }
+
+        private bool IsBombMenacing(Player player, GameState state, string myPlayerId)
+        {
+            var isBombMenacing = false;
+
+            for(var i = player.X; i < state.Width; i++)
+            {
+                var tile = GameStateUtils.GetBoardTile(state, i, player.Y, myPlayerId);
+
+                if (tile == GameStateUtils.Tile.Block ||
+                    tile == GameStateUtils.Tile.BreakableBlock)
+                    break;
+
+                if (tile == GameStateUtils.Tile.Bomb)
+                {   
+                    var bomb = state.Bombs.First(z => z.Value.X == i && z.Value.Y == player.Y).Value;
+                    isBombMenacing = bomb.Range >= Math.Abs(i - player.X);
+                }
+            }
+
+            for(var i = player.X; i >= 0; i--)
+            {
+                var tile = GameStateUtils.GetBoardTile(state, i, player.Y, myPlayerId);
+                
+                if (tile == GameStateUtils.Tile.Block ||
+                    tile == GameStateUtils.Tile.BreakableBlock)
+                    break;
+
+                if (tile == GameStateUtils.Tile.Bomb)
+                {   
+                    var bomb = state.Bombs.First(z => z.Value.X == i && z.Value.Y == player.Y).Value;
+                    isBombMenacing = bomb.Range >= Math.Abs(i - player.X);
+                }
+            }
+
+            for(var i = player.Y; i < state.Height; i++)
+            {
+                var tile = GameStateUtils.GetBoardTile(state, player.X, i, myPlayerId);
+
+                if (tile == GameStateUtils.Tile.Block ||
+                    tile == GameStateUtils.Tile.BreakableBlock)
+                    break;
+
+                if (tile == GameStateUtils.Tile.Bomb)
+                {   
+                    var bomb = state.Bombs.First(z => z.Value.X == player.X && z.Value.Y == i).Value;
+                    isBombMenacing = bomb.Range >= Math.Abs(i - player.Y);
+                }
+            }
+
+            for(var i = player.Y; i >= 0; i--)
+            {
+                var tile = GameStateUtils.GetBoardTile(state, player.X, i, myPlayerId);
+
+                if (tile == GameStateUtils.Tile.Block ||
+                    tile == GameStateUtils.Tile.BreakableBlock)
+                    break;
+
+                if (tile == GameStateUtils.Tile.Bomb)
+                {   
+                    var bomb = state.Bombs.First(z => z.Value.X == player.X && z.Value.Y == i).Value;
+                    isBombMenacing = bomb.Range >= Math.Abs(i - player.Y);
+                }
+            }
+
+            return isBombMenacing;
         }
     }
 }
