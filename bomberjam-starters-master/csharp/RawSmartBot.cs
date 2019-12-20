@@ -11,7 +11,7 @@ namespace Bomberjam.Bot
     // Bot using raw features
     public class RawSmartBot : BaseSmartBot<RawSmartBot.RawPlayerState>
     {
-        private const int FeaturesSize = 18;
+        private const int FeaturesSize = 19;
 
         // Datapoint
         public class RawPlayerState : LabeledDataPoint
@@ -30,6 +30,7 @@ namespace Bomberjam.Bot
             var player = state.Players[myPlayerId];
             var x = player.X;
             var y = player.Y;
+            Console.WriteLine($"Tick: {state.Tick} - {myPlayerId} - {x}/{y}");
 
             var topTile = (uint) GameStateUtils.GetBoardTile(state, x, y - 1, myPlayerId);
             var leftTile = (uint) GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId);
@@ -54,7 +55,7 @@ namespace Bomberjam.Bot
             var bonusInMidRange = ((GameStateUtils.Tile)nextTopTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)topTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextLeftTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)leftTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextRightTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)rightTile == GameStateUtils.Tile.FreeSpace) || ((GameStateUtils.Tile)nextBottomTile == GameStateUtils.Tile.Bonus && (GameStateUtils.Tile)bottomTile == GameStateUtils.Tile.FreeSpace);
 
             var isBombMenacing = this.IsBombMenacing(player, state, myPlayerId);
-            
+
             var features = new List<float>
             {
                 topTile,
@@ -80,6 +81,7 @@ namespace Bomberjam.Bot
                 bonusInMidRange ? 1 : 0,              
 
                 isBombMenacing ? 1 : 0,
+                (float)player.BombsLeft / (float)player.MaxBombs
             };
 
 
