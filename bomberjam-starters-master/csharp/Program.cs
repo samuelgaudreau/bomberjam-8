@@ -10,10 +10,10 @@ namespace Bomberjam.Bot
     public class Program
     {
         // TODO-Setup-1: Set the path of unzipped gamelog files
-        private const string gameLogsPath = @"./../../../../../Games";
+        private const string gameLogsPath = @".\..\..\..\..\..\Games";
 
         // TODO-Setup-1: Define the path where your AI model will be saved
-        private static readonly string modelSavePath = @"./../../../../../Models/smartBot" + DateTime.Now.ToString("O") +".zip";
+        private static readonly string modelSavePath = @".\..\..\..\..\..\Models\smartBot" + DateTime.Now.ToString("s").Replace(':', '_') +".zip";
 
         enum ProgramRole
         {
@@ -37,7 +37,7 @@ namespace Bomberjam.Bot
         public static async Task Main()
         {
             // TODO-Setup-2: Choose if you want to train, test or play
-            var role = ProgramRole.TrainAndTestGame;
+            var role = ProgramRole.TrainAndSave;
 
             // TODO-Extra: You can try using a different algorithm
             // TODO-Extra: You can try different sample size
