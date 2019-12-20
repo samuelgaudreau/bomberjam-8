@@ -41,10 +41,10 @@ namespace Bomberjam.Bot
             var nextRightTile = (uint) GameStateUtils.GetBoardTile(state, x + 2, y, myPlayerId);
             var nextBottomTile = (uint) GameStateUtils.GetBoardTile(state, x, y + 2, myPlayerId);
 
-            //var nexterTopTile = (uint)GameStateUtils.GetBoardTile(state, x, y - 3, myPlayerId);
-            //var nexterLeftTile = (uint)GameStateUtils.GetBoardTile(state, x - 3, y, myPlayerId);
-            //var nexterRightTile = (uint)GameStateUtils.GetBoardTile(state, x + 3, y, myPlayerId);
-            //var nexterBottomTile = (uint)GameStateUtils.GetBoardTile(state, x, y + 3, myPlayerId);
+            var nexterTopTile = (uint)GameStateUtils.GetBoardTile(state, x, y - 3, myPlayerId);
+            var nexterLeftTile = (uint)GameStateUtils.GetBoardTile(state, x - 3, y, myPlayerId);
+            var nexterRightTile = (uint)GameStateUtils.GetBoardTile(state, x + 3, y, myPlayerId);
+            var nexterBottomTile = (uint)GameStateUtils.GetBoardTile(state, x, y + 3, myPlayerId);
 
             var amIOnABomb = GameStateUtils.GetBoardTile(state, x, y, myPlayerId) == GameStateUtils.Tile.Bomb;
 
@@ -68,18 +68,16 @@ namespace Bomberjam.Bot
                 nextRightTile,
                 nextBottomTile,
 
-                //nexterTopTile,
-                //nexterLeftTile,
-                //nexterRightTile,
-                //nexterBottomTile,
+                nexterTopTile,
+                nexterLeftTile,
+                nexterRightTile,
+                nexterBottomTile,
 
                 amIOnABomb ? 1 : 0,
 
                 playerInBombRange ? 1 : 0,
                 bonusInCloseRange ? 1 : 0,
                 bonusInMidRange ? 1 : 0,              
-
-                IsClosestBombEvitable ? 1 : 0,
 
                 isBombMenacing ? 1 : 0,
             };

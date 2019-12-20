@@ -14,6 +14,7 @@ namespace Bomberjam.Bot
 
         // TODO-Setup-1: Define the path where your AI model will be saved
         private static readonly string modelSavePath = @".\..\..\..\..\..\Models\smartBot" + DateTime.Now.ToString("s").Replace(':', '_') +".zip";
+        private static readonly string playableModelPath = @".\..\..\..\..\..\Models\smartBot2019-12-20T12_02_54.zip";
 
         enum ProgramRole
         {
@@ -37,11 +38,11 @@ namespace Bomberjam.Bot
         public static async Task Main()
         {
             // TODO-Setup-2: Choose if you want to train, test or play
-            var role = ProgramRole.TrainAndSave;
+            var role = ProgramRole.PlayGame;
 
             // TODO-Extra: You can try using a different algorithm
             // TODO-Extra: You can try different sample size
-            var sampleSize = 100;
+            var sampleSize = 150;
             var smartBot = new RawSmartBot(MultiClassAlgorithmType.LightGbm, sampleSize);
 
             switch (role)
@@ -95,7 +96,7 @@ namespace Bomberjam.Bot
 
         private static async Task Game<T>(ISmartBot<T> smartBot) where T : LabeledDataPoint
         {
-            await smartBot.Load(modelSavePath);
+            await smartBot.Load(playableModelPath);
             await PlayInBrowserExample(smartBot);
         }
 
