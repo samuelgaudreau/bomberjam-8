@@ -41,7 +41,7 @@ namespace Bomberjam.Bot
 
             // TODO-Extra: You can try using a different algorithm
             // TODO-Extra: You can try different sample size
-            var sampleSize = 100;
+            var sampleSize = 50;
             var smartBot = new RawSmartBot(MultiClassAlgorithmType.LightGbm, sampleSize);
 
             switch (role)
