@@ -31,7 +31,7 @@ namespace Bomberjam.Bot
             var player = state.Players[myPlayerId];
             var x = player.X;
             var y = player.Y;
-            Console.WriteLine($"Tick: {state.Tick} - {myPlayerId} - {x}/{y}");
+            // Console.WriteLine($"Tick: {state.Tick} - {myPlayerId} - {x}/{y}");
 
             var topTile = (uint) GameStateUtils.GetBoardTile(state, x, y - 1, myPlayerId);
             var leftTile = (uint) GameStateUtils.GetBoardTile(state, x - 1, y, myPlayerId);
@@ -93,7 +93,6 @@ namespace Bomberjam.Bot
                 isBombMenacing ? 1 : 0,
                 (float)player.BombsLeft / (float)player.MaxBombs
             };
-
 
             // Don't touch anything under this line
             if (features.Count != FeaturesSize)
