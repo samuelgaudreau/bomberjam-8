@@ -97,7 +97,13 @@ namespace Bomberjam.Bot
                 this.IsTileMakingPoints(player.X + 1, player.Y, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X, player.Y + 1, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X - 1, player.Y, state, myPlayerId) ? 1 : 0,      
-                this.IsTileMakingPoints(player.X, player.Y - 1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X, player.Y - 1, state, myPlayerId) ? 1 : 0,
+
+                 this.IsTileMakingPoints(player.X + 1, player.Y -1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X - 1, player.Y + 1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X - 1, player.Y + 1, state, myPlayerId) ? 1 : 0,      
+                this.IsTileMakingPoints(player.X + 1, player.Y - 1, state, myPlayerId) ? 1 : 0,
+
                 this.IsTileMakingPoints(player.X + 2, player.Y, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X, player.Y + 2, state, myPlayerId) ? 1 : 0,      
                 this.IsTileMakingPoints(player.X - 2, player.Y, state, myPlayerId) ? 1 : 0,      
